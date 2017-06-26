@@ -1,0 +1,17 @@
+Steps(#i) to setup OPENNI_TRACKER for skeletal recognition
+
+
+TO INSTALL AND SETUP EVERYTHING
+#1 first install ros-kinetic by install_ros.sh (drive.google.com = VAIBHAV JAIN/ROS)
+#2 extract and install NiTE 1.5.2.23 library from http://www.openni.ru/openni-sdk/openni-sdk-history-2/
+#3 clone OPENNI_TRACKER from https://github.com/ros-drivers/openni_tracker.git into ~/catkin_ws/src
+#4 run catkin_make
+
+
+TO RUN OPENNI_TRACKER
+#0 (optional) lsusb => to check if kinect is connected properly to usb
+#1 roscore => initiate ros
+#2 roslaunch openni_launch openni.launch => initiate kinect through openni_launch package
+#3 rosrun openni_tracker openni_tracker => run openni_tracker which reads all reading
+#4 rosrun rviz rviz => opens rviz
+#5 (optional) rqt_graph => opens rqt_graph

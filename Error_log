@@ -1,0 +1,5 @@
+ERROR : turtlesim / turtle_tf simulator deos not respond to keys
+{	
+	use command => rosrun turtlesim turtle_teleop_key;
+	then make sure above command's terminal is active;
+}
