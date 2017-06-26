@@ -33,7 +33,7 @@ int main(int argc, char **argv)
   // transform elbow is the new frame we are creating.
   // transform_origin is to feed origin of transform_elbow frame
   // transform_rotation is to feed rotation of transform_elbow frame
-  	tf::Transform transform_elbow, transform_origin, transform_rotation;
+  	tf::StampedTransform transform_elbow, transform_origin, transform_rotation;
 
   	tf::TransformListener listener;
 
@@ -49,7 +49,7 @@ int main(int argc, char **argv)
   	/*???????????????????		END			???????????????*/
     
     transform_elbow.setOrigin( transform_origin.getOrigin() );		//	origin is equals to right shoulder origin
-    transform_elbow.setRotation( );	// 	rotation is equals of openni_depth_frame
+    // transform_elbow.setRotation( );	// 	rotation is equals of openni_depth_frame
     
 	/*
 	Sending a transform with a TransformBroadcaster

@@ -30,7 +30,7 @@ int main(int argc, char **argv)
   	/*
 	Transfrom is a data strucrure of 'tf'
   	*/
-  	tf::Transform transform_arm, transform_origin, transform_rotation;
+  	tf::StampedTransform transform_arm, transform_origin, transform_rotation;
 
   	tf::TransformListener listener;
 
@@ -42,11 +42,11 @@ int main(int argc, char **argv)
   	listener.lookupTransform("/openni_depth_frame", "/right_shoulder", ros::Time(0), transform_origin);
 
   	/*???????????????????		START 		??????????????????????*/
-  	listener.lookupTransform("/openni_depth_frame", "/openni_depth_frame", ros::Time(0), transform_rotation);
+  	//listener.lookupTransform("/openni_depth_frame", "/openni_depth_frame", ros::Time(0), transform_rotation);
   	/*???????????????????		END			???????????????*/
     
     transform_arm.setOrigin( transform_origin.getOrigin() );		//	origin is equals to right shoulder origin
-    transform_arm.setRotation( );	// 	rotation is equals of openni_depth_frame
+    // transform_arm.setRotation( );	// 	rotation is equals of openni_depth_frame
     
 	/*
 	Sending a transform with a TransformBroadcaster
