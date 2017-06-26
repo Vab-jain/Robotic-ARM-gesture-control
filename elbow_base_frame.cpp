@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 	Must call ros::init always. 'init' needs to see argc & argv for some reaseon.
 	The third argument to init() is the name of the node.
 	*/
-	ros::init(argc, argv, "arm_base_frame");
+	ros::init(argc, argv, "elbow_base_frame");
 	
 	/*
     NodeHandle is the main access point to communications with the ROS system.
@@ -30,7 +30,10 @@ int main(int argc, char **argv)
   	/*
 	Transfrom is a data strucrure of 'tf'
   	*/
-  	tf::Transform transform_arm, transform_origin, transform_rotation;
+  // transform elbow is the new frame we are creating.
+  // transform_origin is to feed origin of transform_elbow frame
+  // transform_rotation is to feed rotation of transform_elbow frame
+  	tf::Transform transform_elbow, transform_origin, transform_rotation;
 
   	tf::TransformListener listener;
 
@@ -39,14 +42,14 @@ int main(int argc, char **argv)
   	ros::Rate rate(10.0);
   	
   	while (node.ok()){
-  	listener.lookupTransform("/openni_depth_frame", "/right_shoulder", ros::Time(0), transform_origin);
+  	listener.lookupTransform("/openni_depth_frame", "/elbow_shoulder", ros::Time(0), transform_origin);
 
   	/*???????????????????		START 		??????????????????????*/
   	listener.lookupTransform("/openni_depth_frame", "/openni_depth_frame", ros::Time(0), transform_rotation);
   	/*???????????????????		END			???????????????*/
     
-    transform_arm.setOrigin( transform_origin.getOrigin() );		//	origin is equals to right shoulder origin
-    transform_arm.setRotation( );	// 	rotation is equals of openni_depth_frame
+    transform_elbow.setOrigin( transform_origin.getOrigin() );		//	origin is equals to right shoulder origin
+    transform_elbow.setRotation( );	// 	rotation is equals of openni_depth_frame
     
 	/*
 	Sending a transform with a TransformBroadcaster
@@ -56,7 +59,7 @@ int main(int argc, char **argv)
 	#3	Then, we need to pass the name of the parent frame of the link we're creating
 	#4	Finally, we need to pass the name of the child frame of the link we're creating
 	*/
-	br.sendTransform(tf::StampedTransform(transform_arm, ros::Time::now(), "openni_depth_frame", "arm_base_frame"));
+	br.sendTransform(tf::StampedTransform(transform_elbow, ros::Time::now(), "openni_depth_frame", "elbow_base_frame"));
 
     rate.sleep();
   }
