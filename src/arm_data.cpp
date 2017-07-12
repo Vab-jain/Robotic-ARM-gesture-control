@@ -1,6 +1,11 @@
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
 #include <tf/transform_listener.h>
+#include "iostream"
+
+using namespace std;
+
+
 
 int main(int argc, char **argv)
 {
@@ -16,7 +21,7 @@ int main(int argc, char **argv)
 
 	tf::TransformListener listener;
 
-	ros::Rate rate(10.0);
+	ros::Rate rate(2.0);
 
 	if(node.ok()){
 		try{
@@ -27,7 +32,7 @@ int main(int argc, char **argv)
 		}
 	    catch (tf::TransformException ex){
 	         ROS_ERROR("%s",ex.what());
-	         ros::Duration(1.0).sleep();
+	         // ros::Duration(1.0).sleep();
 	    }
 	}
 
@@ -42,11 +47,26 @@ int main(int argc, char **argv)
 	         ros::Duration(1.0).sleep();
 	    }
 
-	    tf::Quaternion quaternion_shoulder_diff(1,1,1,1);
-	    tf::Quaternion quaternion_elbow_diff(1,1,1,1);
 
-	    quaternion_shoulder_diff *= transform_shoulder_curr.getRotation() - transform_shoulder_prev.getRotation();
-	    quaternion_elbow_diff *= transform_elbow_curr.getRotation() - transform_elbow_prev.getRotation();
+	    // cout << *transform_shoulder_curr.getRotation() << endl;
+	    // cout << *transform_shoulder_prev.getRotation() << endl;
+
+	    const tf::Quaternion &quaternion_shoulder_diff = transform_shoulder_curr.getRotation() - transform_shoulder_prev.getRotation();
+	    // ROS_ERROR(quaternion_shoulder_diff);
+	    const tf::Quaternion &quaternion_elbow_diff = transform_elbow_curr.getRotation() - transform_elbow_prev.getRotation();
+	    ROS_ERROR("END OF STUPID CODE");
+	    tf::Matrix3x3 m(quaternion_shoulder_diff);
+	    double roll, pitch, yaw;
+
+	    m.getRPY(roll, pitch, yaw);
+
+	    cout << *quaternion_shoulder_diff << endl;
+	    cout << "roll" << endl;
+	    cout << roll << endl;
+	    cout << "pitch" << endl;
+	    cout << pitch << endl;
+	    cout << "yaw" << endl;
+	    cout << yaw << endl;
 
 	    geometry_msgs::Quaternion shoulder_diff, elbow_diff;
 
