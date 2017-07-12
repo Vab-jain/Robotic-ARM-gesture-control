@@ -210,3 +210,6 @@ target_link_libraries(elbow_base_frame ${catkin_LIBRARIES})
 
 add_executable(arm_base_transform src/arm_base_transform.cpp)
 target_link_libraries(arm_base_transform ${catkin_LIBRARIES})
+
+add_executable(arm_data src/arm_data.cpp)
+target_link_libraries(arm_data ${catkin_LIBRARIES})
