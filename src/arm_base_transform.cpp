@@ -42,10 +42,10 @@ int main(int argc, char**argv)
    * than we can send them, the number here specifies how many messages to
    * buffer up before throwing some away.
    */
-	
+	// why 3 different publisher ?????????
 	ros::Publisher arm_data_shoulder = node.advertise<geometry_msgs::Twist>("arm_data_shoulder", 10);
 	ros::Publisher arm_data_elbow = node.advertise<geometry_msgs::Twist>("arm_data_elbow", 10);
-	//ros::Publisher arm_data_hand = node.advertise<geometry_msgs::Twist>("arm_data_hand", 10);
+	// ros::Publisher arm_data_hand = node.advertise<geometry_msgs::Twist>("arm_data_hand", 10);
 
 	/*
 	frequency of loop in 'Hz'
@@ -58,7 +58,7 @@ int main(int argc, char**argv)
 		StampedTransfrom is a data strucrure of 'tf'
 		Child class of Transform. Additional => time stamp
 		*/
-		tf::StampedTransform transform_right_shoulder,transform_right_elbow,transform_right_hand;
+		tf::StampedTransform transform_right_shoulder,transform_right_elbow;
 
 		try{
 
@@ -72,10 +72,8 @@ int main(int argc, char**argv)
 			*/
 
       		// listener.lookupTransform("/arm_base_frame", "/right_shoulder", ros::Time(0), transform_right_shoulder);
-      		// listener.lookupTransform("/arm_base_frame", "/right_elbow", ros::Time(0), transform_right_elbow);
-      		// listener.lookupTransform("/arm_base_frame", "/right_hand", ros::Time(0), transform_right_hand);
       		listener.lookupTransform("/arm_base_frame", "/right_elbow", ros::Time(0), transform_right_shoulder);
-      		listener.lookupTransform("/arm_base_frame", "/right_hand", ros::Time(0), transform_right_elbow);
+      		listener.lookupTransform("/elbow_base_frame", "/right_hand", ros::Time(0), transform_right_elbow);
     	}
     	catch (tf::TransformException &ex) {
 		    ROS_ERROR("%s",ex.what());
@@ -87,7 +85,6 @@ int main(int argc, char**argv)
 		geometry_msgs provides messages for common geometric primitives such as points, vectors, and poses
 	    */
 	    //can also use StampedTwist if we require TimeStamp
-		// geometry_msgs::Twist shoulder_pose, elbow_pose, hand_pose;
 		geometry_msgs::Twist shoulder_pose, elbow_pose;
 
 		// linear data
@@ -99,26 +96,15 @@ int main(int argc, char**argv)
 		elbow_pose.linear.y = transform_right_elbow.getOrigin().y();
 		elbow_pose.linear.z = transform_right_elbow.getOrigin().z();
 
-		/*
-		hand_pose.linear.x = transform_right_hand.getOrigin().x();
-		hand_pose.linear.y = transform_right_hand.getOrigin().y();
-		hand_pose.linear.z = transform_right_hand.getOrigin().z();
-		*/
 
 		// angular data
-		shoulder_pose.angular.x = atan2(sqrt(pow(transform_right_shoulder.getOrigin().y(), 2) + pow(transform_right_shoulder.getOrigin().z(), 2)), transform_right_shoulder.getOrigin().x());
+		shoulder_pose.angular.x = atan2(sqrt(pow(transform_right_shoulder.getOrigin().y(), 2) + pow(transform_right_shoulder.getOrigin().z(), 2)), transform_right_shoulder.getOrigin().x() );
 		shoulder_pose.angular.y = atan2(sqrt(pow(transform_right_shoulder.getOrigin().x(), 2) + pow(transform_right_shoulder.getOrigin().z(), 2)), transform_right_shoulder.getOrigin().y() );
 		shoulder_pose.angular.z = atan2(sqrt(pow(transform_right_shoulder.getOrigin().x(), 2) + pow(transform_right_shoulder.getOrigin().y(), 2)), transform_right_shoulder.getOrigin().z() );
 
 		elbow_pose.angular.x = atan2(sqrt(pow(transform_right_elbow.getOrigin().y(), 2) + pow(transform_right_elbow.getOrigin().z(), 2)), transform_right_elbow.getOrigin().x() );
 		elbow_pose.angular.y = atan2(sqrt(pow(transform_right_elbow.getOrigin().x(), 2) + pow(transform_right_elbow.getOrigin().z(), 2)), transform_right_elbow.getOrigin().y() );
 		elbow_pose.angular.z = atan2(sqrt(pow(transform_right_elbow.getOrigin().x(), 2) + pow(transform_right_elbow.getOrigin().y(), 2)), transform_right_elbow.getOrigin().z() );
-
-		/*
-		hand_pose.angular.x = atan2(sqrt(pow(transform_right_hand.getOrigin().y(), 2) + pow(transform_right_hand.getOrigin().z(), 2)), x );
-		hand_pose.angular.y = atan2(sqrt(pow(transform_right_hand.getOrigin().x(), 2) + pow(transform_right_hand.getOrigin().z(), 2)), y );
-		hand_pose.angular.z = atan2(sqrt(pow(transform_right_hand.getOrigin().x(), 2) + pow(transform_right_hand.getOrigin().y(), 2)), z );
-		*/
 
 		arm_data_shoulder.publish(shoulder_pose);
 		arm_data_elbow.publish(elbow_pose);
